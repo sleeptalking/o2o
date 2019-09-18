@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.o2o.dao.ProductCategoryDao">
+
+    <select id="queryProductCategoryByShopId" resultType="com.zx.o2o.entity.ProductCategory">
+
+        select p.product_category_id,
+        p.product_category_name,
+        p.product_category_desc,
+        p.priority,p.create_time,
+        p.last_edit_time,
+        p.shop_id
+        from tb_product_category p
+        where p.shop_id = #{shopId}
+        order by p.priority desc
+    </select>
+
+    <!-- insert into tb_product_category(product_category_name,product_category_desc,priority,create_time,shop_id)
+     values ('ceshi1', 'c1', 9, '2019-08-22', 2) , ('ceshi2', 'c2', 8, '2019-08-22', 2 )-->
+
+
+    <insert id="batchInsertProductCategory" parameterType="java.util.List">
+        insert into tb_product_category(product_category_name,product_category_desc,priority,create_time,shop_id)
+        values
+        <foreach collection="list" item="productCategory" separator=",">
+            (
+            #{productCategory.productCategoryName},
+            #{productCategory.productCategoryDesc},
+            #{productCategory.priority},
+            #{productCategory.createTime},
+            #{productCategory.shopId}
+            )
+        </foreach>
+    </insert>
+    <delete id="deleteProductCategory"  >
+        delete from tb_product_category where product_category_id = #{productCategoryId} and shop_id = #{shopId}
+    </delete>
+
+</mapper>
