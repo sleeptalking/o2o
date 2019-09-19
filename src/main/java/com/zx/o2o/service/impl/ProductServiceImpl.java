@@ -10,6 +10,7 @@ import com.zx.o2o.enums.ProductStateEnum;
 import com.zx.o2o.exceptions.ProductOperationExceptions;
 import com.zx.o2o.service.ProductService;
 import com.zx.o2o.util.ImageUtils;
+import com.zx.o2o.util.PageCalculator;
 import com.zx.o2o.util.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,24 @@ public class ProductServiceImpl implements ProductService {
             return new ProductExecution(ProductStateEnum.EMPTY);
         }
 
+    }
+
+    @Override
+    public ProductExecution getProductList(Product productCondition, int pageIndex, int pageSize) {
+        int rowIndex = PageCalculator.calculatorRowIndex(pageIndex,pageSize);
+        List<Product> list = productDao.queryProductList(productCondition,rowIndex,pageSize);
+        int count = productDao.queryProductCount(productCondition);
+        ProductExecution pe = new ProductExecution();
+        if(list != null){
+            pe.setProductList(list);
+            pe.setCount(count);
+            pe.setState(ProductStateEnum.SUCCESS.getState());
+            pe.setStateInfo(ProductStateEnum.SUCCESS.getStateInfo());
+        }else{
+            pe.setState(ProductStateEnum.INNER_ERROR.getState());
+            pe.setStateInfo(ProductStateEnum.INNER_ERROR.getStateInfo());
+        }
+        return pe;
     }
 
 

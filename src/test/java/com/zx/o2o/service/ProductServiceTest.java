@@ -6,6 +6,7 @@ import com.zx.o2o.dto.ProductExecution;
 import com.zx.o2o.entity.Product;
 import com.zx.o2o.entity.Shop;
 import com.zx.o2o.enums.ProductStateEnum;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +14,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +23,7 @@ public class ProductServiceTest extends BaseTest {
     @Autowired
     ProductService productService;
     @Test
+    @Ignore
     public void testAddProduct() throws FileNotFoundException {
         Product product = new Product();
         product.setProductName("测试商品2");
@@ -51,6 +52,18 @@ public class ProductServiceTest extends BaseTest {
         ProductExecution productExecution = productService.addProduct(product,imageHolder,list);
         System.out.println(productExecution.getState());
         System.out.println(productExecution.getStateInfo());
+    }
+
+    @Test
+    public void testGetProductList(){
+        Product product = new Product();
+        product.setProductName("2");
+        product.setEnableStatus(1);
+        Shop shop = new Shop();
+        shop.setShopId(1l);
+        product.setShop(shop);
+        ProductExecution pe = productService.getProductList(product,0,100);
+        System.out.println(pe.getProductList().size());
     }
 
 

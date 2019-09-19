@@ -23,6 +23,7 @@ public interface ShopDao {
      * @return
      */
     int queryShopCount(@Param("shopCondition")Shop shopCondition);
+
     /**
      * 通过shop id查询店铺
      * @param shopId

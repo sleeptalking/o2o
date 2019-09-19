@@ -10,6 +10,15 @@ public class ProductCategory {
     private String productCategoryDesc;
     private Integer priority;
     private Date createTime;
+    private Date lastEditTime;
+
+    public Date getLastEditTime() {
+        return lastEditTime;
+    }
+
+    public void setLastEditTime(Date lastEditTime) {
+        this.lastEditTime = lastEditTime;
+    }
 
     public Long getProductCategoryId() {
         return productCategoryId;

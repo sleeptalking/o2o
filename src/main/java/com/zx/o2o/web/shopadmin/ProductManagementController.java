@@ -20,6 +20,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +36,40 @@ public class ProductManagementController {
     //支持上传商品详情图片的最大数量
     private static final int IMAGEMAXCOUNT = 6;
 
-    @RequestMapping(value = "addproduct", method = RequestMethod.POST)
+    @RequestMapping(value = "/getproductlist", method = {RequestMethod.POST,RequestMethod.GET})
+    @ResponseBody
+    public Map<String, Object> getProductList(HttpServletRequest request) {
+        Map<String, Object> modelMap = new HashMap<>();
+        Product product = new Product();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String productStr = HttpServletRequestUtils.getString(request,"productStr");
+        int pageIndex = HttpServletRequestUtils.getInt(request,"pageIndex");
+        int pageSize = HttpServletRequestUtils.getInt(request,"pageSzie");
+        if(productStr != null){
+            try {
+                product = objectMapper.readValue(productStr, Product.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            ProductExecution pe = productService.getProductList(product,0,100);
+            modelMap.put("success",true);
+            modelMap.put("msg",pe.getStateInfo());
+            modelMap.put("productList",pe.getProductList());
+            modelMap.put("count",pe.getCount());
+
+        }catch (ProductOperationExceptions e){
+            modelMap.put("success",false);
+            modelMap.put("msg",e.getMessage());
+        }
+        return modelMap;
+    }
+
+
+
+    @RequestMapping(value = "/addproduct", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> addProduct(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
