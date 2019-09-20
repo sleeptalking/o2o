@@ -261,10 +261,10 @@ public class ShopManagementController {
             ShopExecution shopExecution = null;
             try {
                 if(shopImg == null){
-                    shopExecution = shopService.modityShop(shop, null);
+                    shopExecution = shopService.modifyShop(shop, null);
                 }else{
                     ImageHolder imageHolder = new ImageHolder(shopImg.getOriginalFilename(),shopImg.getInputStream());
-                    shopExecution = shopService.modityShop(shop, imageHolder);
+                    shopExecution = shopService.modifyShop(shop, imageHolder);
                 }
                 if (shopExecution.getState() == ShopStateEnum.SUCCESS.getState()) {
                     modleMap.put("success", true);

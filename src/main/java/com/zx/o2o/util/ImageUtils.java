@@ -4,15 +4,12 @@ import com.zx.o2o.dto.ImageHolder;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import sun.rmi.runtime.Log;
 
 import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
-import java.util.prefs.BackingStoreException;
 
 public class ImageUtils {
     private static String basePath = Thread.currentThread().getContextClassLoader().getResource("").getPath();

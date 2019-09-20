@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zx.o2o.dto.ImageHolder;
 import com.zx.o2o.dto.ProductExecution;
 import com.zx.o2o.entity.Product;
+import com.zx.o2o.entity.Result;
 import com.zx.o2o.entity.Shop;
 import com.zx.o2o.enums.ProductStateEnum;
 import com.zx.o2o.exceptions.ProductOperationExceptions;
@@ -38,8 +39,7 @@ public class ProductManagementController {
 
     @RequestMapping(value = "/getproductlist", method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
-    public Map<String, Object> getProductList(HttpServletRequest request) {
-        Map<String, Object> modelMap = new HashMap<>();
+    public Result<List<Product>> getProductList(HttpServletRequest request) {
         Product product = new Product();
         ObjectMapper objectMapper = new ObjectMapper();
         String productStr = HttpServletRequestUtils.getString(request,"productStr");
@@ -52,23 +52,46 @@ public class ProductManagementController {
                 e.printStackTrace();
             }
         }
-
         try {
             ProductExecution pe = productService.getProductList(product,0,100);
-            modelMap.put("success",true);
-            modelMap.put("msg",pe.getStateInfo());
-            modelMap.put("productList",pe.getProductList());
-            modelMap.put("count",pe.getCount());
+            return  new Result<List<Product>>(true,pe.getProductList());
 
         }catch (ProductOperationExceptions e){
-            modelMap.put("success",false);
-            modelMap.put("msg",e.getMessage());
+            return  new Result<List<Product>>(false,e.getMessage());
+
         }
-        return modelMap;
     }
 
 
 
+    @RequestMapping(value = "/modityproduct", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<Product> modifyProduct(HttpServletRequest request){
+        Result<Product> result = new Result<>();
+        if (!CodeUtil.checkVerifyCode(request)) {
+            result.setSuccess(false);
+            result.setMsg("验证码错误");
+            return result;
+        }
+        try {
+
+        }catch (ProductOperationExceptions e){
+
+        }
+        return result;
+    }
+    @RequestMapping(value = "/getproductbyid", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<Product> getProductById(HttpServletRequest request){
+
+        long productId = HttpServletRequestUtils.getLong(request,"productId");
+        try {
+            Product product = productService.getProductById(productId);
+            return new Result<Product>(true,product);
+        }catch (ProductOperationExceptions e){
+            return new Result<Product>(false,e.getMessage());
+        }
+    }
     @RequestMapping(value = "/addproduct", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> addProduct(HttpServletRequest request) {

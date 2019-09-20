@@ -5,8 +5,6 @@ import com.zx.o2o.dto.ShopExecution;
 import com.zx.o2o.entity.Shop;
 import com.zx.o2o.exceptions.ShopOperationExceptions;
 
-import java.io.InputStream;
-
 public interface ShopService {
 
     /**
@@ -40,5 +38,5 @@ public interface ShopService {
      * @return
      * @throws ShopOperationExceptions
      */
-    ShopExecution modityShop(Shop shop, ImageHolder imageHolder) throws ShopOperationExceptions;
+    ShopExecution modifyShop(Shop shop, ImageHolder imageHolder) throws ShopOperationExceptions;
 }

@@ -39,6 +39,7 @@ public class ProductDaoTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testQueryProductList(){
         Product product = new Product();
         product.setProductName("2");
@@ -48,6 +49,24 @@ public class ProductDaoTest extends BaseTest {
         product.setShop(shop);
         List<Product> list = productDao.queryProductList(product,0,100);
         System.out.println(list.size());
+    }
+
+    @Test
+    @Ignore
+    public void testQueryProductById(){
+        Product product = productDao.queryProductById(21l);
+        System.out.println(product.getProductName());
+    }
+    @Test
+    public void testUpDateProduct(){
+        Product product = new Product();
+        Shop shop = new Shop();
+        shop.setShopId(1l);
+        product.setShop(shop);
+        product.setProductId(21l);
+        product.setProductName("测试商品3");
+        int count= productDao.updateProduct(product);
+        System.out.println(count);
     }
 
 }

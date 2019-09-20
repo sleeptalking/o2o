@@ -2,19 +2,29 @@ package com.zx.o2o.entity;
 
 public class Result<T> {
     private boolean success;
-    private int errorCode;
-    private String errorMsg;
+    private int code;
+    private String msg;
     private T data;
 
     public Result(){}
     public Result(boolean success,T data){
         this.success = success;
         this.data = data;
+        this.code = 200;
+        this.msg = "成功";
     }
-    public Result(boolean success,int errorCode,String errorMsg){
+    public Result(boolean success,int code,String msg){
         this.success = success;
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
+        this.data = null;
+        this.code = code;
+        this.msg = msg;
+
+    }
+    public Result(boolean success,String msg){
+        this.success = success;
+        this.data = null;
+        this.code = -1;
+        this.msg = msg;
 
     }
 
@@ -26,20 +36,20 @@ public class Result<T> {
         this.success = success;
     }
 
-    public int getErrorCode() {
-        return errorCode;
+    public int getCode() {
+        return code;
     }
 
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public T getData() {

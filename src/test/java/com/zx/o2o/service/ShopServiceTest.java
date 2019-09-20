@@ -45,7 +45,7 @@ public class ShopServiceTest extends BaseTest {
         shop.setShopName("修改后的店铺名称");
         File file = new File("D:\\timg1.jpg");
         InputStream inputStream = new FileInputStream(file);
-        ShopExecution shopExecution = shopService.modityShop(shop,new ImageHolder("timg1.jpg",inputStream));
+        ShopExecution shopExecution = shopService.modifyShop(shop,new ImageHolder("timg1.jpg",inputStream));
         System.out.println("shopImg :"+shopExecution.getShop().getShopImg());
 
     }

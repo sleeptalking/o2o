@@ -14,6 +14,16 @@ public class Product {
     private Integer priority;
     private Date createTime;
     private Date lastEditTime;
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
+    private int point;
     //-1.不可用  0.下架  1.在前端展示系统展示
     private Integer enableStatus;
 

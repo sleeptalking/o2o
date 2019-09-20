@@ -32,4 +32,21 @@ public interface ProductDao {
      */
     int queryProductCount(@Param("productCondition") Product productCondition);
 
+
+    /**
+     * 通过商品id  查询商品
+     * @param productId
+     * @return
+     */
+    Product queryProductById(Long productId);
+
+
+    /**
+     * 更新商品详情
+     * @param product
+     * @return
+     */
+    int updateProduct(Product product);
+
+
 }

@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -99,8 +98,9 @@ public class ShopServiceImpl implements ShopService {
         return shopDao.queryByShopId(shopId);
     }
 
+
     @Override
-    public ShopExecution modityShop(Shop shop,ImageHolder imageHolder) throws ShopOperationExceptions {
+    public ShopExecution modifyShop(Shop shop,ImageHolder imageHolder) throws ShopOperationExceptions {
         if (shop == null || shop.getShopId() == null) {
             return new ShopExecution(ShopStateEnum.NULL_SHOP);
         } else {
@@ -123,7 +123,7 @@ public class ShopServiceImpl implements ShopService {
                     return new ShopExecution(ShopStateEnum.SUCCESS, shop);
                 }
             } catch (Exception e) {
-                throw new ShopOperationExceptions("modityShop error:" + e.getMessage());
+                throw new ShopOperationExceptions("modifyShop error:" + e.getMessage());
             }
         }
     }
