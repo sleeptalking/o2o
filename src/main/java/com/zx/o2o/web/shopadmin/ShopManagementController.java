@@ -256,6 +256,7 @@ public class ShopManagementController {
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
             shopImg = (CommonsMultipartFile) multipartHttpServletRequest.getFile("shopImg");
         }
+
         //2.修改店铺信息
         if (shop != null && shop.getShopId() != null) {
             ShopExecution shopExecution = null;
@@ -285,6 +286,3 @@ public class ShopManagementController {
     }
 
 }
-
-
-//测试上传

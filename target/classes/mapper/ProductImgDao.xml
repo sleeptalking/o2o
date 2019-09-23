@@ -12,5 +12,12 @@
             (#{productImg.imgAddr},#{productImg.imgDesc},#{productImg.createTime},#{productImg.productId},#{productImg.priority})
         </foreach>
     </insert>
+    <select id="queryProductImgList" parameterType="Long" resultType="java.util.List">
+        select img_addr, img_desc, create_time, product_id,priority from tb_product_img where product_id =#{productId}
+    </select>
+
+    <delete id="deleteProductImgByProductId" parameterType="long">
+        delete from tb_product_img where product_id = #{productId}
+    </delete>
 
 </mapper>

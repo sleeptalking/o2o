@@ -37,15 +37,15 @@ public class ProductManagementController {
     //支持上传商品详情图片的最大数量
     private static final int IMAGEMAXCOUNT = 6;
 
-    @RequestMapping(value = "/getproductlist", method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = "/getproductlist", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public Result<List<Product>> getProductList(HttpServletRequest request) {
         Product product = new Product();
         ObjectMapper objectMapper = new ObjectMapper();
-        String productStr = HttpServletRequestUtils.getString(request,"productStr");
-        int pageIndex = HttpServletRequestUtils.getInt(request,"pageIndex");
-        int pageSize = HttpServletRequestUtils.getInt(request,"pageSzie");
-        if(productStr != null){
+        String productStr = HttpServletRequestUtils.getString(request, "productStr");
+        int pageIndex = HttpServletRequestUtils.getInt(request, "pageIndex");
+        int pageSize = HttpServletRequestUtils.getInt(request, "pageSzie");
+        if (productStr != null) {
             try {
                 product = objectMapper.readValue(productStr, Product.class);
             } catch (IOException e) {
@@ -53,45 +53,75 @@ public class ProductManagementController {
             }
         }
         try {
-            ProductExecution pe = productService.getProductList(product,0,100);
-            return  new Result<List<Product>>(true,pe.getProductList());
+            ProductExecution pe = productService.getProductList(product, 0, 100);
+            return new Result<List<Product>>(true, pe.getProductList());
 
-        }catch (ProductOperationExceptions e){
-            return  new Result<List<Product>>(false,e.getMessage());
+        } catch (ProductOperationExceptions e) {
+            return new Result<List<Product>>(false, e.getMessage());
 
         }
     }
-
 
 
     @RequestMapping(value = "/modityproduct", method = RequestMethod.POST)
     @ResponseBody
-    public Result<Product> modifyProduct(HttpServletRequest request){
-        Result<Product> result = new Result<>();
+    public Result<Product> modifyProduct(HttpServletRequest request) {
         if (!CodeUtil.checkVerifyCode(request)) {
-            result.setSuccess(false);
-            result.setMsg("验证码错误");
-            return result;
+            return new Result<Product>(false, "验证码错误");
         }
+
+        MultipartHttpServletRequest multipartRequest = null;
+        ImageHolder thumbnail = null;
+        List<ImageHolder> productImgs = new ArrayList<>();
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver(request.getSession().getServletContext());
+
+        Product product = null;
+        String productStr = HttpServletRequestUtils.getString(request, "productStr");
+        ObjectMapper mapper = new ObjectMapper();
         try {
+            if (resolver.isMultipart(request)) {
+                multipartRequest = (MultipartHttpServletRequest) request;
+                CommonsMultipartFile thumbnailFile = (CommonsMultipartFile) multipartRequest.getFile("thumbnail");
+                thumbnail = new ImageHolder(thumbnailFile.getOriginalFilename(), thumbnailFile.getInputStream());
+                for (int i = 0; i < IMAGEMAXCOUNT; i++) {
+                    CommonsMultipartFile productImg = (CommonsMultipartFile) multipartRequest.getFile("productImg" + i);
+                    if (productImg != null) {
+                        productImgs.add(new ImageHolder(productImg.getOriginalFilename(), productImg.getInputStream()));
+                    }
+                }
+            }
 
-        }catch (ProductOperationExceptions e){
-
+            product = mapper.readValue(productStr, Product.class);
+        } catch (Exception e) {
+            return new Result<Product>(false, e.getMessage());
         }
-        return result;
+
+        if (product != null) {
+            try {
+                Result<Product> result = productService.modifyProduct(product, thumbnail, productImgs);
+                return result;
+            } catch (ProductOperationExceptions e) {
+                return new Result<>(false, e.getMessage());
+            }
+        } else {
+            return new Result<>(false, "请输入商品信息");
+        }
+
     }
+
     @RequestMapping(value = "/getproductbyid", method = RequestMethod.POST)
     @ResponseBody
-    public Result<Product> getProductById(HttpServletRequest request){
+    public Result<Product> getProductById(HttpServletRequest request) {
 
-        long productId = HttpServletRequestUtils.getLong(request,"productId");
+        long productId = HttpServletRequestUtils.getLong(request, "productId");
         try {
             Product product = productService.getProductById(productId);
-            return new Result<Product>(true,product);
-        }catch (ProductOperationExceptions e){
-            return new Result<Product>(false,e.getMessage());
+            return new Result<Product>(true, product);
+        } catch (ProductOperationExceptions e) {
+            return new Result<Product>(false, e.getMessage());
         }
     }
+
     @RequestMapping(value = "/addproduct", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> addProduct(HttpServletRequest request) {
@@ -150,21 +180,21 @@ public class ProductManagementController {
 
                 Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
                 Shop shop = new Shop();
-                if(currentShop == null){
-                    String shopId = HttpServletRequestUtils.getString(request,"shopId");
+                if (currentShop == null) {
+                    String shopId = HttpServletRequestUtils.getString(request, "shopId");
                     shop.setShopId(Long.parseLong(shopId));
 
-                }else{
+                } else {
                     shop.setShopId(currentShop.getShopId());
                 }
 
                 product.setShop(shop);
                 ProductExecution productExecution = productService.addProduct(product, thumbnail, productImgList);
-                if(productExecution.getState() == ProductStateEnum.SUCCESS.getState()){
-                    modelMap.put("success",true);
-                }else{
-                    modelMap.put("success",false);
-                    modelMap.put("errMsg",productExecution.getStateInfo());
+                if (productExecution.getState() == ProductStateEnum.SUCCESS.getState()) {
+                    modelMap.put("success", true);
+                } else {
+                    modelMap.put("success", false);
+                    modelMap.put("errMsg", productExecution.getStateInfo());
                 }
 
             } catch (ProductOperationExceptions e) {
@@ -173,7 +203,7 @@ public class ProductManagementController {
                 return modelMap;
             }
 
-        }else{
+        } else {
             modelMap.put("success", false);
             modelMap.put("errMsg", "请输入商品信息");
             return modelMap;

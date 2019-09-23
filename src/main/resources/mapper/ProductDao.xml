@@ -110,8 +110,9 @@
     <select id="queryProductById" parameterType="Long" resultMap="productMap">
         select p.product_id,p.product_name,p.product_desc,p.img_addr,p.normal_price,p.promotion_price,
                p.product_category_id,p.priority,p.create_time, p.last_edit_time, p.enable_status,p.shop_id,p.point,
-               pm.product_img_id,pm.img_addr,pm.priority,pm.img_desc,pm.create_time from tb_product p left join tb_product_img pm
-                   on p.product_id = pm.product_id where p.product_id =#{productId} order by pm.priority desc
+               pm.product_img_id,pm.img_addr,pm.priority,pm.img_desc,pm.create_time
+        from tb_product p left join tb_product_img pm
+            on p.product_id = pm.product_id where p.product_id =#{productId} order by pm.priority desc
 
 
     </select>
