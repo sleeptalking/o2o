@@ -8,17 +8,16 @@ public class PathUtils {
         String os = System.getProperty("os.name");
         String basePath = "";
         if (os.toLowerCase().startsWith("win")) {
-            basePath = "D:/o2o/images/";
+            basePath = "D:/tomcat9/webapps/o2o/";
         } else {
-            basePath = "home/xiangze/image/";
+            basePath = "home/xiangze/";
         }
         basePath = basePath.replace("/", separator);
         return basePath;
     }
-
     public static String getShopImagePath(Long shopId) {
 
-        String imagePath = "upload/item/shop/" + shopId + "/";
+        String imagePath = "images/upload/item/shop/" + shopId + "/";
         return imagePath.replace("/", separator);
     }
 }
